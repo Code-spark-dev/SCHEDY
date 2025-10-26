@@ -1,0 +1,28 @@
+.home {display: flex; width: 100%; justify-content: space-between;}
+.home .todo_section {width: calc(100% / 3 - 8px); }
+.home .todo_section .title_box {background-color: var(--main_bg_color); border-radius: var(--section_border-radius); display: flex; align-items: center; gap: 10px; padding:  12px 20px; margin-bottom: 16px;}
+.home .todo_section .title_box .title_icon path {fill: var(--main_color);}
+.home .todo_section .title_box h2 {font-size: 20px; color: var(--main_color); font-weight: 700;}
+.home .todo_section .todo_list {background-color: var(--main_bg_color); border-radius: var(--section_border-radius); padding: 20px; transition: height 0.4s; max-height: calc(100vh - 160px); overflow-y: auto; position: relative;}
+.home .todo_section .todo_list .empty_msg {font-size: 14px; color: var(--main_gray_color); height: 110px; display: grid; place-content: center;}
+.home .todo_section .todo_list:not(.empty) {height: auto; padding: 20px;}
+
+/* 스크롤 바 css */
+.home .todo_section .todo_list::-webkit-scrollbar {width: 5px; position: absolute; top: 20px; right: 10px;}
+.home .todo_section .todo_list::-webkit-scrollbar-thumb {background-color: var(--point_color); border-radius: 3px;}
+.home .todo_section .todo_list::-webkit-scrollbar-track {background-color: #fff;}
+
+@media (max-width: 1400px) {
+    .home  {padding: 0 20px;}
+}
+@media (max-width: 960px) {
+    .home .todo_section .todo_list:not(.empty) {padding: 15px;}
+}
+@media (max-width: 780px) {
+    .home {flex-wrap: wrap; gap: 50px;}
+    .home .todo_section {width: 100%;}
+    .home .todo_section .todo_list {max-height: none; overflow-y:unset;}
+    .home .todo_section .title_box {background-color: var(--point_color);}
+    .home .todo_section .title_box h2 {color: #fff;}
+    .home .todo_section .title_box .title_icon path {fill: #fff;}
+}
