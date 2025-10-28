@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb"); 
 
-// 미들웨어
+/* 미들웨어 */
 router.use((req, res, next) => {
   req.todoCollection = req.app.locals.db.collection("todo");
   next();
 });
 
-//할 일 목록 조회
+/*할 일 목록 조회*/
 router.get("/", async(req,res)=>{
     try{
         const todoCollection = req.todoCollection;
@@ -36,7 +36,7 @@ router.get("/", async(req,res)=>{
     }
 });
 
-//할일 목록 추가
+/*할일 목록 추가*/
 router.post("/", async(req,res)=>{
     try{
         const todoCollection = req.todoCollection;
@@ -63,7 +63,7 @@ router.post("/", async(req,res)=>{
   }
 });
 
-//할 일 목록 삭제
+/*할 일 목록 삭제*/
 router.delete("/:id", async(req,res)=>{
     try{
         const todoCollection = req.todoCollection;
@@ -81,7 +81,7 @@ router.delete("/:id", async(req,res)=>{
   }
 });
 
-//할 일 목록 수정
+/*할 일 목록 수정*/
 router.put("/:id", async(req,res)=>{
     try{
         const todoCollection = req.todoCollection;
@@ -105,5 +105,53 @@ router.put("/:id", async(req,res)=>{
     res.status(500).json({ message: "서버 오류" });
   }
 });
+
+/*할 일 status 변경*/
+
+router.patch("/:id/position", async (req, res) => {
+  try {
+    const db = req.app.locals.db;
+    const { id } = req.params;
+    const { status, order } = req.body;
+
+    const allowedStatuses = ["planned", "ongoing", "complete"];
+
+    //현재 status
+    const todosInStatus = await db
+      .collection("todos")
+      .find({ status })
+      .sort({ order: 1 }) //오름차순 정렬
+      .toArray();
+
+    //드래그된 todo를 해당 위치에 추가
+    todosInStatus.splice(order, 0, { _id: new ObjectId(id) });
+    //splice 문법 : array.splice(시작인덱스, 삭제할개수, [추가할요소1, 추가할요소2...])
+
+    //order값 업데이트
+    const newStatus = todosInStatus.map((todo, index) => ({
+      updateOne: {
+        filter: { _id: todo._id },
+        update: { $set: { order: index } },
+      },
+    }));
+
+    //status값 업데이트
+    newStatus.push({
+      updateOne: {
+        filter: { _id: new ObjectId(id) },
+        update: { $set: { status, order } },
+      },
+    });
+
+    // db 반영
+    await db.collection("todo").bulkWrite(newStatus);
+
+    res.status(200).json({ message: "Status update" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 module.exports = router;

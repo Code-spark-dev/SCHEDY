@@ -16,7 +16,7 @@ connectDB()
   .then((client) => {
     app.locals.db = client.db("schedy");
 
-    app.use("/todo", todoRouter);
+    app.use("/api/todo", todoRouter);
     // app.use("/calendar", calendarRouter);
     // app.use("/auth", authRouter);
 
