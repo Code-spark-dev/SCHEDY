@@ -38,3 +38,12 @@
 @media (max-width: 600px) {
     .todo_item .todo_info .todo_date .todo_day {font-size: 20px;}
 }
+@media (max-width: 450px) {
+    .todo_item {padding: 12px;}
+    .todo_item .todo_info .todo_date {flex-direction: row;}
+    .todo_item .todo_info .todo_date .flex_box {font-size: 16px; font-weight: 700;}
+    .todo_item .todo_info .todo_date .todo_day {order: 2; font-size: 16px; margin-left: -2px;}
+    .todo_item .todo_info .todo_date .flex_box .todo_month {position: relative;}
+    .todo_item .todo_info .todo_date .flex_box .todo_month::after {content: ".";}
+    .todo_item .todo_info .todo_text {width: 100%;}
+}
