@@ -2,12 +2,17 @@ require('dotenv').config();
 const express = require("express");
 const methodOverride = require("method-override");
 const { connectDB } = require("./db/mongo");
+const cors = require("cors");
 
 const todoRouter = require("./routes/todo");
 // const calendarRouter = require("./routes/calendar");
 // const authRouter = require("./routes/auth");
 
 const app = express();
+app.uns(cors({
+  origin:"http://localhost:3000",
+  credentials: true
+}))
 app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
