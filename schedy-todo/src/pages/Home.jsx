@@ -1,5 +1,8 @@
+// src/pages/Home.js
+
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import axios from "axios";
 import "../styles/Home.css";
 import TodoItem from "../components/TodoItem";
 import todosData from "../data/todoContents.json";
@@ -9,11 +12,32 @@ export default function Home() {
   const [ongoingTodos, setOngoingTodos] = useState([]);
   const [completeTodos, setCompleteTodos] = useState([]);
 
+  // ✅ 1. 투두 불러오기
+  const fetchTodos = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/todo");
+      setPlannedTodos(res.data.planned || []);
+      setOngoingTodos(res.data.ongoing || []);
+      setCompleteTodos(res.data.complete || []);
+    } catch (err) {
+      console.error("❌ 서버 연결 실패:", err);
+    }
+  };
+
   useEffect(() => {
-    setPlannedTodos(todosData.planned || []);
-    setOngoingTodos(todosData.ongoing || []);
-    setCompleteTodos(todosData.complete || []);
+    fetchTodos();
   }, []);
+
+  // ✅ 2. 삭제 기능
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/todo/${id}`);
+      console.log("🗑️ 삭제 완료:", id);
+      fetchTodos(); // 삭제 후 목록 새로고침
+    } catch (err) {
+      console.error("❌ 삭제 실패:", err);
+    }
+  };
 
   // 드래그앤드롭
   const onDragEnd = (result) => {
@@ -94,7 +118,7 @@ export default function Home() {
                 index={idx}
                 droppableId={droppableId}
                 onEdit={() => console.log("edit", todo)}
-                onDelete={() => console.log("delete", todo)}
+                 onDelete={() => handleDelete(todo._id)}
               />
             ))
           )}
