@@ -1,0 +1,49 @@
+.todo_item {border: 1px solid var(--disabled_color); background-color: #fff; margin-bottom: 10px; border-radius: var(--todo_item_border-radius); display: flex; align-items: flex-start; justify-content: space-between; padding: 14px; gap: 10px;}
+.todo_item:last-child {margin-bottom: 0;}
+.todo_item .todo_info {display: flex; gap: 10px;}
+.todo_item .todo_info .todo_date {display: flex; flex-direction: column; gap: 3px;}
+.todo_item .todo_info .todo_date .todo_day {font-size: 24px; font-weight: 700; color: var(--main_color); text-align: center;}
+.todo_item .todo_info .todo_date .flex_box {display: flex; font-size: 10px; color: var(--main_color);}
+.todo_item .todo_info .todo_date .flex_box .todo_year {}
+.todo_item .todo_info .todo_date .flex_box .todo_month {}
+.todo_item .todo_info .todo_text {}
+.todo_item .todo_info .todo_text .todo_time {font-size: 12px; font-weight: 500; color: var( --main_gray_color); margin-bottom: 5px; display: block;}
+.todo_item .todo_info .todo_text .todo_content {font-size: 14px; word-break: keep-all; line-height: 1.5; white-space: pre-line;}
+.todo_item .todo_btn {display: flex; gap: 10px; align-items: center;}
+.todo_item .todo_btn button {border: none; background-color: transparent; padding: 0;}
+.todo_item .todo_btn button svg path {fill: var(--disabled_color); transition: .4s;}
+.todo_item .todo_btn button:hover svg path {fill: var(--main_color);}
+.todo_item .todo_btn .edit_btn {}
+.todo_item .todo_btn .delete_btn {}
+
+/* Complete css */
+.home .complete .todo_item {background-color: var(--disabled_color);}
+.home .complete .todo_item .todo_info .todo_date .todo_day {color: var(--main_gray_color);}
+.home .complete .todo_item .todo_info .todo_date .flex_box {color: var(--main_gray_color);}
+.home .complete .todo_item .todo_info .todo_text .todo_content {color: var(--main_gray_color);}
+.home .complete .todo_item .todo_btn button svg path {fill: var(--main_gray_color); transition: .4s;}
+.home .complete .todo_item .todo_btn button:hover svg path {fill: var(--main_color);}
+
+
+@media (max-width: 960px) {
+    .todo_item {padding: 10px; flex-wrap: wrap;}
+    .todo_item .todo_btn {gap: 5px; width: 100%; justify-content: flex-end;}
+    .todo_item .todo_btn button svg {width: 18px;}
+}
+@media (max-width: 780px) {
+    .todo_item {position: relative;}
+    .todo_item .todo_info {flex-wrap: wrap;}
+    .todo_item .todo_btn {position: absolute; top: 10px; right: 10px; width: auto;}
+}
+@media (max-width: 600px) {
+    .todo_item .todo_info .todo_date .todo_day {font-size: 20px;}
+}
+@media (max-width: 450px) {
+    .todo_item {padding: 12px;}
+    .todo_item .todo_info .todo_date {flex-direction: row;}
+    .todo_item .todo_info .todo_date .flex_box {font-size: 16px; font-weight: 700;}
+    .todo_item .todo_info .todo_date .todo_day {order: 2; font-size: 16px; margin-left: -2px;}
+    .todo_item .todo_info .todo_date .flex_box .todo_month {position: relative;}
+    .todo_item .todo_info .todo_date .flex_box .todo_month::after {content: ".";}
+    .todo_item .todo_info .todo_text {width: 100%;}
+}
