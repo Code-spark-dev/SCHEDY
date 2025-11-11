@@ -15,6 +15,7 @@ body {width: 100%; max-width: 1400px; margin: 0 auto !important;}
   --main_color: #121212;
   --main_bg_color: #f5f5f5;
   --main_gray_color: #666;
+  --error_color: #F33F3F;
   --disabled_color: #ccc;
   --btn_border_radius: 30px;
   --btn_padding: 10px 20px;

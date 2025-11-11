@@ -2,7 +2,7 @@
 .header .header_logo {}
 .header .header_logo .logo_img {width: 100%; max-width: 142px; height: auto;}
 .header .header_actions {display: flex; align-items: center; gap: 10px;}
-.header .header_actions .header_btn {border-radius: var(--btn_border_radius); padding: var(--btn_padding); color: #fff; font-size: 14px;}
+.header .header_actions .header_btn {border-radius: var(--btn_border_radius); padding: var(--btn_padding); color: #fff; font-size: 14px; border: none; cursor: pointer;}
 .header .header_actions .btn_style {background-color: var(--main_color);}
 .header .header_actions .header_todo_btn {background-color: var(--point_color);}
 .header .header_actions .header_todo_btn span {font-weight: 700;}
