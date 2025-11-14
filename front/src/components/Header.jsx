@@ -4,7 +4,7 @@ import { ReactComponent as Logo } from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function Header() {
+export default function Header({ onOpenTodoModal, onResetTodos }) {
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -14,6 +14,10 @@ export default function Header() {
 
   const handleLogoutClick = () => {
     logout();
+    if (onResetTodos) {
+      onResetTodos();
+    }
+    alert("로그아웃 되었습니다.");
     navigate("/");
   };
 
@@ -27,7 +31,7 @@ export default function Header() {
         {isLoggedIn ? (
           <>
             <button onClick={handleLogoutClick} className="header_logout_btn header_btn btn_style">로그아웃</button>
-            <button onClick={() => navigate("/todo")} className="header_todo_btn header_btn">TODO 작성</button>
+            <button onClick={onOpenTodoModal} className="header_todo_btn header_btn">TODO 작성</button>
           </>
         ) : (
           <>

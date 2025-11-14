@@ -1,15 +1,18 @@
-// src/pages/Home.js
-
 import React, { useState, useEffect, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import axios from "axios";
 import "../styles/Home.css";
 import TodoItem from "../components/TodoItem";
+import TodoModal from "../components/TodoModal";
+import Header from "../components/Header";
 
 export default function Home() {
   const [plannedTodos, setPlannedTodos] = useState([]);
   const [ongoingTodos, setOngoingTodos] = useState([]);
   const [completeTodos, setCompleteTodos] = useState([]);
+  const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
+  const [editingTodo, setEditingTodo] = useState(null);
 
   // ✅ 1. 투두 불러오기
   const fetchTodos = async () => {
@@ -36,7 +39,30 @@ export default function Home() {
     };
     fetchTodos();
   }, []);
+  //추가 기능
+  const openTodoModal = () => {setIsTodoModalOpen(true);};
+  const closeTodoModal = () => {
+    setIsTodoModalOpen(false);
+  };
+  const handleCreateTodo = async (todoData) => {
+    try {const res = await axios.post("http://localhost:8080/api/todo", todoData);
+      const newTodo = res.data.data;
+      if (newTodo.status === "planned") {
+        setPlannedTodos((prev) => [...prev, newTodo]);
+      } else if (newTodo.status === "ongoing") {
+        setOngoingTodos((prev) => [...prev, newTodo]);
+      } else if (newTodo.status === "complete") {
+        setCompleteTodos((prev) => [...prev, newTodo]);
+      }
 
+      // 모달 닫기
+      setIsTodoModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert("TODO 등록에 실패했습니다.");
+    }
+  };
+  
   // ✅ 2. 삭제 기능
   const handleDelete = async (id) => {
     try {
@@ -95,6 +121,14 @@ export default function Home() {
     if (destination.droppableId === "planned") setPlannedTodos(destList);
     if (destination.droppableId === "ongoing") setOngoingTodos(destList);
     if (destination.droppableId === "complete") setCompleteTodos(destList);
+
+    // 🔥 movedItem의 status + order를 서버에 저장
+    axios
+      .patch(`http://localhost:8080/api/todo/${movedItem._id}/position`, {
+        status: destination.droppableId,
+        order: destination.index,
+      })
+      .catch((err) => console.error("❌ 상태 업데이트 실패:", err));
   };
 
   // 스크롤바 감지
@@ -126,7 +160,10 @@ export default function Home() {
                 todo={todo}
                 index={idx}
                 droppableId={droppableId}
-                onEdit={() => console.log("edit", todo)}
+                onEdit={() => {
+                  setEditingTodo(todo);
+                  setIsTodoModalOpen(true);
+                }}
                  onDelete={() => handleDelete(todo._id)}
               />
             ))
@@ -138,7 +175,9 @@ export default function Home() {
   );
 
   return (
-    <main className="home">
+    <>
+      <Header onOpenTodoModal={openTodoModal} />
+      <main className="home">
       <DragDropContext onDragEnd={onDragEnd}>
         {/* Planned */}
         <section className="todo_section planned">
@@ -179,6 +218,33 @@ export default function Home() {
           </div>
         </section>
       </DragDropContext>
-    </main>
+      <TodoModal
+        isOpen={isTodoModalOpen}
+        onClose={() => {
+          setEditingTodo(null);
+          closeTodoModal();
+        }}
+        onSubmit={(data) => {
+          if (editingTodo) {
+            axios
+              .put(`http://localhost:8080/api/todo/${editingTodo._id}`, {
+                content: data.content,
+                dueDate: data.date,
+                dueTime: data.time,
+              })
+              .then(() => {
+                setEditingTodo(null);
+                closeTodoModal();
+                fetchTodos();
+              })
+              .catch((err) => console.error("수정 실패:", err));
+          } else {
+            handleCreateTodo(data);
+          }
+        }}
+        editingTodo={editingTodo}
+      />
+      </main>
+    </>
   );
 }

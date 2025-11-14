@@ -1,0 +1,73 @@
+/* 배경 어둡게 (오버레이) */
+.todo-modal-backdrop {
+  position: fixed;
+  inset: 0; /* top, right, bottom, left 0 */
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* 모달 박스 */
+.todo-modal {
+  width: 800px;
+  max-width: 90%;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.todo-modal h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+/* 각 입력 필드 */
+.todo-modal-field {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-modal-field label {
+  font-size: 14px;
+  color: #555;
+}
+
+.todo-modal-field input,
+.todo-modal-field textarea {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+/* 버튼 영역 */
+.todo-modal-buttons {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cancel-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+.submit-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  background: #007f5f; /* SCHEDY 메인 컬러 느낌으로 */
+  color: #fff;
+  cursor: pointer;
+}
