@@ -1,7 +1,5 @@
-/* 배경 어둡게 (오버레이) */
-.todo-modal-backdrop {
-  position: fixed;
-  inset: 0; /* top, right, bottom, left 0 */
+.todo-modal-backdrop {  position: fixed;
+  inset: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
@@ -25,7 +23,6 @@
   margin-bottom: 24px;
 }
 
-/* 각 입력 필드 */
 .todo-modal-field {
   margin-bottom: 20px;
   display: flex;
@@ -67,7 +64,7 @@
   padding: 8px 20px;
   border-radius: 20px;
   border: none;
-  background: #007f5f; /* SCHEDY 메인 컬러 느낌으로 */
+  background: #007f5f;
   color: #fff;
   cursor: pointer;
 }

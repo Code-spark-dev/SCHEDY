@@ -1,9 +1,7 @@
-// src/components/TodoModal.jsx
 import React, { useState, useEffect } from "react";
-import "./TodoModal.css"; // 모달 전용 css
+import "./TodoModal.css"; 
 
 export default function TodoModal({ isOpen, onClose, onSubmit, editingTodo }) {
-  // 날짜, 시간, 내용 입력값 상태
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [content, setContent] = useState("");
@@ -20,34 +18,30 @@ export default function TodoModal({ isOpen, onClose, onSubmit, editingTodo }) {
     }
   }, [editingTodo]);
 
-  // 모달이 닫힐 때 입력값도 같이 초기화하고 싶으면
+  // 모달이 닫힐 때 입력값도 함께 초기화
   const handleClose = () => {
     setDate("");
     setTime("");
     setContent("");
-    onClose(); // 부모에게 “닫아줘” 신호
+    onClose(); 
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 간단 검증
     if (!date || !time || !content.trim()) {
       alert("날짜, 시간, 내용을 모두 입력해주세요.");
       return;
     }
 
-    // 부모 컴포넌트로 데이터 넘기기
     onSubmit({
       date,
       time,
       content,
     });
 
-    // 전송 후 모달 닫기
     handleClose();
   };
 
-  // isOpen이 false면 아무 것도 렌더링하지 않음
   if (!isOpen) return null;
 
   return (
@@ -59,7 +53,6 @@ export default function TodoModal({ isOpen, onClose, onSubmit, editingTodo }) {
           {/* 날짜 입력 */}
           <div className="todo-modal-field">
             <label>날짜를 선택해주세요</label>
-            {/* 기본 input[type="date"] 사용 (달력 라이브러리 나중에 교체 가능) */}
             <input
               type="date"
               value={date}

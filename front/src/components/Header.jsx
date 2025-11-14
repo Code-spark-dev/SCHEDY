@@ -15,7 +15,7 @@ export default function Header({ onOpenTodoModal, onResetTodos }) {
   const handleLogoutClick = () => {
     logout();
     if (onResetTodos) {
-      onResetTodos();
+      onResetTodos(); //로그아웃시 항목 초기화
     }
     alert("로그아웃 되었습니다.");
     navigate("/");

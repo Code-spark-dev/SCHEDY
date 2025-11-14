@@ -165,47 +165,47 @@ router.patch("/:id/position", requireLogin, async (req, res) => {
   }
 });
 
-/* 🔥 프론트에서 온 전체 상태를 저장하는 update-status */
-router.put("/update-status", requireLogin, async (req, res) => {
-  try {
-    const todoCollection = req.todoCollection;
-    console.log("✅ [PUT /update-status] body:", JSON.stringify(req.body, null, 2));
-    const { planned, ongoing, complete } = req.body;
+// /* 🔥 프론트에서 온 전체 상태를 저장하는 update-status */
+// router.put("/update-status", requireLogin, async (req, res) => {
+//   try {
+//     const todoCollection = req.todoCollection;
+//     console.log("✅ [PUT /update-status] body:", JSON.stringify(req.body, null, 2));
+//     const { planned, ongoing, complete } = req.body;
 
-    const bulkOps = [];
+//     const bulkOps = [];
 
-    // 공용 함수: 리스트 + status로 bulkWrite 준비
-    const addOps = (list, status) => {
-      if (!Array.isArray(list)) return;
-      list.forEach((todo, index) => {
-        if (!todo._id) return;
-        bulkOps.push({
-          updateOne: {
-            filter: { _id: new ObjectId(todo._id), userId: new ObjectId(req.userId) },
-            update: {
-              $set: {
-                status,
-                order: index,
-              },
-            },
-          },
-        });
-      });
-    };
+//     // 공용 함수: 리스트 + status로 bulkWrite 준비
+//     const addOps = (list, status) => {
+//       if (!Array.isArray(list)) return;
+//       list.forEach((todo, index) => {
+//         if (!todo._id) return;
+//         bulkOps.push({
+//           updateOne: {
+//             filter: { _id: new ObjectId(todo._id), userId: new ObjectId(req.userId) },
+//             update: {
+//               $set: {
+//                 status,
+//                 order: index,
+//               },
+//             },
+//           },
+//         });
+//       });
+//     };
 
-    addOps(planned, "planned");
-    addOps(ongoing, "ongoing");
-    addOps(complete, "complete");
+//     addOps(planned, "planned");
+//     addOps(ongoing, "ongoing");
+//     addOps(complete, "complete");
 
-    if (bulkOps.length > 0) {
-      await todoCollection.bulkWrite(bulkOps);
-    }
+//     if (bulkOps.length > 0) {
+//       await todoCollection.bulkWrite(bulkOps);
+//     }
 
-    res.status(200).json({ message: "Status + order updated!" });
-  } catch (err) {
-    console.error("update-status Error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+//     res.status(200).json({ message: "Status + order updated!" });
+//   } catch (err) {
+//     console.error("update-status Error:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 module.exports = router;
