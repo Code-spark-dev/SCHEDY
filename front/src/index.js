@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import { HashRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

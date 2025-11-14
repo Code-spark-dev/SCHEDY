@@ -60,7 +60,7 @@ useEffect(() => {
     setIsTodoModalOpen(false);
   };
   const handleCreateTodo = async (todoData) => {
-    try {const res = await axios.post("http://localhost:8080/api/todo", todoData);
+    try {const res = await axios.post("http://localhost:8080/api/todo", todoData,{ withCredentials: true });
       const newTodo = res.data.data;
       if (newTodo.status === "planned") {
         setPlannedTodos((prev) => [...prev, newTodo]);

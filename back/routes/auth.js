@@ -23,20 +23,18 @@ passport.use(
 
 /* 로그인 성공시 세션에 정보 저장 */
 passport.serializeUser((user, done) => {
-  process.nextTick(() => {
-    done(null, { id: user._id, username: user.username });
-  });
+  done(null, user._id);
 });
 
 /* 재로그인시 세션에서 해당 정보 복구 */
-passport.deserializeUser(async (user, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
     const result = await global.db
       .collection("user")
-      .findOne({ _id: new ObjectId(user.id) });
+      .findOne({ _id: new ObjectId(id) });
     if (!result) return done(null, false);
     delete result.password;
-    process.nextTick(() => done(null, result));
+    done(null, result);
   } catch (err) {
     done(err);
   }
