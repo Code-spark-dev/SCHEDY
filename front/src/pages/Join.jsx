@@ -4,6 +4,7 @@ import { ReactComponent as Logo } from "../assets/logo.svg";
 import { ReactComponent as HideIcon } from "../assets/password_hide.svg";
 import { ReactComponent as ShowIcon } from "../assets/password_show.svg";
 import "../styles/Join.css";
+import axios from "axios";
 
 export default function Join() {
   const [email, setEmail] = useState("");
@@ -65,24 +66,34 @@ export default function Join() {
   };
 
   // 폼 제출
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (idError) {
-      alert("아이디를 올바르게 입력해주세요.");
+
+    if (idError || nameError || passwordError) {
+      alert("입력값을 확인해주세요.");
       return;
     }
-    if (nameError) {
-      alert("이름을 올바르게 입력해주세요.");
-      return;
+
+    try {
+      const res = await axios.post("http://localhost:8080/api/auth/register", {
+        username: email,
+        password,
+        name,
+      });
+
+      if (res.status === 200) {
+        alert("회원가입이 완료되었습니다!");
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+      alert(`회원가입 실패: ${err.message}`);
     }
-    if (passwordError) {
-      alert("비밀번호를 올바르게 입력해주세요.");
-      return;
-    }
-    console.log({ email, password, name });
-    alert("회원가입이 완료되었습니다.");
-    navigate("/login"); // 가입 후 로그인 화면으로 이동
-  };
+  }
+};
 
   return (
     <div className="join_page">

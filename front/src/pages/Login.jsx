@@ -5,6 +5,7 @@ import { ReactComponent as HideIcon } from "../assets/password_hide.svg";
 import { ReactComponent as ShowIcon } from "../assets/password_show.svg";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,13 +14,25 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email === "test@test.com" && password === "1234") {
-      login();
-      navigate("/");
-    } else {
-      alert("아이디 또는 비밀번호가 올바르지 않습니다!");
+    try {
+      const res = await axios.post("http://localhost:8080/api/auth/login",
+        {username:email,password},
+        {withCredentials:true}
+      );
+
+      if (res.status === 200) {
+        login();
+        alert("로그인 성공!");
+        navigate("/");
+      }
+    } catch (err) {
+      if (err.response && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("로그인 실패! 서버를 확인해주세요.");
+      }
     }
   };
 

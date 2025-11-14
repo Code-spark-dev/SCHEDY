@@ -11,7 +11,7 @@ const MongoStore = require("connect-mongo");
 const todoRouter = require("./routes/todo");
 const authRouter = require("./routes/auth");
 
-const app = express();
+
 app.use(cors({
   origin:"http://localhost:3000",
   credentials: true
@@ -26,10 +26,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false, 
   cookie: {
-    maxAge: 1000 * 60 * 60, // 1시간 유지
+    maxAge: 1000 * 60 * 60,
   },
   store: MongoStore.create({
-    mongoUrl: process.env.DB_URL,
+    mongoUrl: process.env.MONGO_URL,
     dbName: "schedy",
   }),
 }));

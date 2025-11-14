@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
+/* 로그인 확인 LocalStrategy 라이브러리 사용법 */
 passport.use(
   new LocalStrategy(async (username, password, cb) => {
     try {
@@ -20,12 +21,14 @@ passport.use(
   })
 );
 
+/* 로그인 성공시 세션에 정보 저장 */
 passport.serializeUser((user, done) => {
   process.nextTick(() => {
     done(null, { id: user._id, username: user.username });
   });
 });
 
+/* 재로그인시 세션에서 해당 정보 복구 */
 passport.deserializeUser(async (user, done) => {
   try {
     const result = await global.db
@@ -68,7 +71,7 @@ router.post("/register", async (req, res) => {
       username,
       password: hash,
     });
-    res.status(201).json({ message: "회원가입 성공" });
+    res.status(200).json({ message: "회원가입 성공" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "회원가입 중 오류 발생" });
