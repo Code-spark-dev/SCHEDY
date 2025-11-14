@@ -6,6 +6,7 @@ import "../styles/Home.css";
 import TodoItem from "../components/TodoItem";
 import TodoModal from "../components/TodoModal";
 import Header from "../components/Header";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const [plannedTodos, setPlannedTodos] = useState([]);
@@ -25,8 +26,12 @@ export default function Home() {
       console.error("❌ 서버 연결 실패:", err);
     }
   };
+  // 로그인 여부 가져오기
+const { isLoggedIn } = useAuth();
 
-  useEffect(() => {
+useEffect(() => {
+  // 로그인되어 있다면 TODO 불러오기
+  if (isLoggedIn) {
     const fetchTodos = async () => {
       try {
         const res = await axios.get("http://localhost:8080/api/todo");
@@ -37,8 +42,18 @@ export default function Home() {
         console.error("백엔드 서버 연결 실패:", err);
       }
     };
+
     fetchTodos();
-  }, []);
+  }
+
+  // 로그인되어 있지 않다면 빈 리스트로 초기화
+  else {
+    setPlannedTodos([]);
+    setOngoingTodos([]);
+    setCompleteTodos([]);
+  }
+}, [isLoggedIn]);
+
   //추가 기능
   const openTodoModal = () => {setIsTodoModalOpen(true);};
   const closeTodoModal = () => {
