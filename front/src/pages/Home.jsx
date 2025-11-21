@@ -105,10 +105,18 @@ useEffect(() => {
       const items = listMap[source.droppableId];
       const [movedItem] = items.splice(source.index, 1);
       items.splice(destination.index, 0, movedItem);
-
+      // ui대로 order 재계산해서 PATCH
+      items.forEach((item, idx) => {item.order = idx;});
+      const newOrder = items.find(i => i._id === movedItem._id).order;
+      
       if (source.droppableId === "planned") setPlannedTodos(items);
       if (source.droppableId === "ongoing") setOngoingTodos(items);
       if (source.droppableId === "complete") setCompleteTodos(items);
+      
+      axios.patch(`http://localhost:8080/api/todo/${movedItem._id}/position`, {
+        status: destination.droppableId,
+        order: newOrder,
+      }).catch((err) => console.error("❌ 상태 업데이트 실패:", err));
       return;
     }
 
@@ -127,6 +135,13 @@ useEffect(() => {
     // 원래 리스트에서 제거 후, 새 리스트에 삽입
     const [movedItem] = sourceList.splice(source.index, 1);
     destList.splice(destination.index, 0, movedItem);
+    // 각 리스트의 order 재계산
+    sourceList.forEach((item, idx) => {item.order = idx;});
+    destList.forEach((item, idx) => {item.order = idx;
+});
+    // 각 리스트의 order 재계산
+    sourceList.forEach((item, idx) => {item.order = idx;});
+    destList.forEach((item, idx) => {item.order = idx;});
 
     // 상태 갱신
     if (source.droppableId === "planned") setPlannedTodos(sourceList);
