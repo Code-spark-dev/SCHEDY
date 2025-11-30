@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as Logo } from "../assets/logo.svg";
 import { ReactComponent as HideIcon } from "../assets/password_hide.svg";
 import { ReactComponent as ShowIcon } from "../assets/password_show.svg";
+import CustomModal from "../components/Modal"; // Modal 컴포넌트 가져오기
 import "../styles/Join.css";
 import axios from "axios";
 
@@ -14,6 +15,8 @@ export default function Join() {
   const [idError, setIdError] = useState(""); // 아이디 에러 메시지
   const [nameError, setNameError] = useState(""); // 이름 에러 메시지
   const [passwordError, setPasswordError] = useState(""); // 비밀번호 에러 메시지
+  const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 추가
   const navigate = useNavigate();
 
   // 사용할 수 없는 아이디 체크
@@ -70,7 +73,8 @@ export default function Join() {
     e.preventDefault();
 
     if (idError || nameError || passwordError) {
-      alert("입력값을 확인해주세요.");
+      setModalMessage("입력값을 확인해주세요."); // 에러 메시지 설정
+      setIsModalOpen(true); // 모달 열기
       return;
     }
 
@@ -82,18 +86,20 @@ export default function Join() {
       });
 
       if (res.status === 200) {
-        alert("회원가입이 완료되었습니다!");
-        navigate("/login");
+        setModalMessage("회원가입이 완료되었습니다!");
+        setIsModalOpen(true);
+        setTimeout(() => navigate("/login"), 2000); // 2초 후 로그인 페이지로 이동
       }
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data.message) {
-        alert(err.response.data.message);
+        setModalMessage(err.response.data.message); // 에러 메시지 설정
       } else {
-      alert(`회원가입 실패: ${err.message}`);
+        setModalMessage(`회원가입 실패: ${err.message}`);
+      }
+      setIsModalOpen(true); // 모달 열기
     }
-  }
-};
+  };
 
   return (
     <div className="join_page">
@@ -121,6 +127,9 @@ export default function Join() {
 
         <button type="submit" className="join">회원가입</button>
       </form>
+
+      {/* CustomModal 사용 */}
+      <CustomModal isOpen={isModalOpen} message={modalMessage} onClose={() => setIsModalOpen(false)}/>
     </div>
   );
 }

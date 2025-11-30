@@ -4,6 +4,7 @@ import { ReactComponent as Logo } from "../assets/logo.svg";
 import { ReactComponent as HideIcon } from "../assets/password_hide.svg";
 import { ReactComponent as ShowIcon } from "../assets/password_show.svg";
 import { useAuth } from "../context/AuthContext";
+import CustomModal from "../components/Modal"; // Modal 컴포넌트 가져오기
 import "../styles/Login.css";
 import axios from "axios";
 
@@ -11,6 +12,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [modalMessage, setModalMessage] = useState(""); // 모달 메시지 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태 추가
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -24,15 +27,15 @@ export default function Login() {
 
       if (res.status === 200) {
         login();
-        alert("로그인 성공!");
-        navigate("/");
+        navigate("/", { state: { notification: "로그인 되었습니다." } });
       }
     } catch (err) {
       if (err.response && err.response.data.message) {
-        alert(err.response.data.message);
+        setModalMessage(err.response.data.message); // 에러 메시지 설정
       } else {
-        alert("로그인 실패! 서버를 확인해주세요.");
+        setModalMessage("로그인에 실패하였습니다. 서버를 확인해주세요.");
       }
+      setIsModalOpen(true); // 모달 열기
     }
   };
 
@@ -63,6 +66,9 @@ export default function Login() {
         <button type="submit" className="login">로그인</button>
         <button type="button" className="join" onClick={handleSignup}>회원가입</button>
       </form>
+
+      {/* CustomModal 사용 */}
+      <CustomModal isOpen={isModalOpen} message={modalMessage} onClose={() => setIsModalOpen(false)}/>
     </div>
   );
 }

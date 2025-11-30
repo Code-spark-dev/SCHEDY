@@ -1,4 +1,8 @@
-.todo-modal-backdrop {  position: fixed;
+/* ------------------
+   1. 모달 기본 구조
+------------------ */
+.todo-modal-backdrop {  
+  position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
@@ -7,64 +11,287 @@
   z-index: 999;
 }
 
-/* 모달 박스 */
 .todo-modal {
-  width: 800px;
+  width: 700px;
   max-width: 90%;
   background: #ffffff;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  outline: none;
+  position: relative;
 }
 
-.todo-modal h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 24px;
+.todo-modal h2.modal-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
 }
 
 .todo-modal-field {
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.todo-modal-field label {
-  font-size: 14px;
-  color: #555;
+  position: relative;
 }
 
 .todo-modal-field input,
-.todo-modal-field textarea {
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 10px 12px;
-  font-size: 14px;
+.todo-modal-field textarea,
+.todo-modal-field .input-display {
+  background-color: #f3f4f6;
+  border: none;
+  border-radius: 20px;
+  width: 100%;
+  padding: 0 24px;
+  font-size: 16px;
+  box-sizing: border-box;
+  color: #333;
+  outline: none;
 }
 
-/* 버튼 영역 */
-.todo-modal-buttons {
-  margin-top: 24px;
+.todo-modal-field input,
+.todo-modal-field .input-display {
+  height: 50px;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+}
+
+.todo-modal-field textarea {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  resize: none;
+  font-family: inherit;
+}
+
+.todo-modal-field .input-display {
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.todo-modal-field .input-display.placeholder {
+  color: #999; 
+}
+
+.todo-modal-field .input-display .calendar-icon {
+  font-size: 20px;
+}
+
+.todo-modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
   gap: 10px;
 }
 
-.cancel-btn {
-  padding: 8px 20px;
-  border-radius: 20px;
+.cancel-btn,
+.submit-btn {
+  padding: 0 20px;
+  height: 30px;
+  border-radius: 15px;
   border: none;
-  background: #333;
-  color: #fff;
+  font-size: 12px;
   cursor: pointer;
 }
 
-.submit-btn {
-  padding: 8px 20px;
-  border-radius: 20px;
-  border: none;
-  background: #007f5f;
+.cancel-btn {
+  background: var(--main_color);
   color: #fff;
-  cursor: pointer;
+}
+
+.submit-btn {
+  background: var(--point_color);
+  color: #fff;
+}
+
+/* -----------------------
+   2. React-Calendar
+----------------------- */
+
+.calendar-popup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  margin-top: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  padding: 16px;
+}
+
+.react-calendar {
+  width: 280px;
+  border: none;
+  background: #fff;
+  font-family: inherit;
+}
+
+.react-calendar__navigation {
+  background: var(--point_color);
+  height: 44px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+}
+
+.react-calendar__navigation button {
+  color: #fff;
+  min-width: 44px;
+  height: 44px;
+  background: none;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 12px;
+}
+
+.react-calendar__navigation button:enabled:focus {
+  background-color: transparent;
+}
+
+.react-calendar__navigation button:enabled:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 요일 (Su Mo Tu...) 컨테이너 */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: 0.8em;
+}
+
+/* 요일 글자 스타일 */
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+  text-decoration: none;
+}
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+  cursor: default;
+  color: var(--main_gray_color);
+}
+
+.react-calendar__month-view__weekdays__weekday:nth-child(1) abbr {
+  color: var(--error_color);
+}
+
+.react-calendar__month-view__weekdays__weekday:nth-child(7) abbr {
+  color: #4a90e2;
+}
+
+/* 날짜 그리드 */
+.react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+/* 날짜 타일 공통 */
+.react-calendar__tile {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  border-radius: 50% !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0 !important;
+  width: auto !important;
+}
+
+/* 지난 달 / 다음 달 날짜 흐리게 처리 */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: var(--disabled_color) !important;
+  pointer-events: none;
+}
+
+/* 호버 효과 */
+.react-calendar__tile:enabled:hover {
+  background-color: #e0f5f1;
+  color: var(--point_color);
+  transform: scale(1.1);
+  font-weight: 700;
+}
+
+/* 현재 선택된 날짜 */
+.react-calendar__tile--active {
+  background: var(--point_color) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1);
+}
+
+/* 오늘 날짜 */
+.react-calendar__tile--now {
+  background: #f1f3f5;
+  color: var(--point_color);
+  font-weight: 700;
+}
+.react-calendar__tile--now.react-calendar__tile--active {
+  background: var(--point_color);
+  color: #fff;
+}
+
+/* 날짜 숫자 색상 - 주말 */
+.react-calendar__month-view__days__day--weekend { color: var(--error_color); }
+
+.react-calendar__month-view__days__day--weekend:nth-child(7n) { color: #4a90e2; }
+
+/* -------------------------------------------
+   3. 년도/월 선택 뷰 (Year/Decade View) 커스텀
+------------------------------------------- */
+
+.react-calendar__year-view__months,
+.react-calendar__decade-view__years,
+.react-calendar__century-view__decades {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.react-calendar__year-view__months__month, 
+.react-calendar__decade-view__years__year,
+.react-calendar__century-view__decades__decade {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  height: auto !important;
+  padding: 16px 0 !important;
+  border-radius: 16px !important;
+  font-size: 14px;
+  font-weight: 600;
+  
+  /* 이전 코드의 flex 속성 초기화 (grid가 제어함) */
+  flex: unset !important;
+  max-width: unset !important;
+  width: auto !important;
+}
+
+.react-calendar__year-view__months__month:hover,
+.react-calendar__decade-view__years__year:hover,
+.react-calendar__century-view__decades__decade:hover {
+  background-color: #e0f5f1;
+  color: var(--point_color);
+}
+
+.react-calendar__navigation button:disabled {
+  background-color: var(--point_color) !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+}
+
+.react-calendar__navigation button:disabled:hover {
+  background-color: var(--point_color) !important;
+  color: #fff !important;
+}
+
+.react-calendar__tile--hasActive {
+  background: var(--point_color);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
